@@ -36,19 +36,21 @@ class NewCampus extends Component{
     this.setState({description: data.target.value});
   }
 
-  handleSubmit = (event) => {
-    axios.post('http://localhost:5000/api/campuses',{
-      'name': this.state.campus,
-      'url': this.state.url,
-      'location': this.state.location,
-      'description': this.state.description,
-      'population': 0
+  handleSubmit = () => {
+    console.log(
+      this.state.campus
+    );
+    axios.post('api/campuses/',{
+      name: this.state.campus,
+      image: this.state.url,
+      address: this.state.location,
+      description: this.state.description
     }).then(response => {
       console.log(response);
     }).catch(err => {
       console.log(err);
     });
-    window.location.replace('/campuslist');
+   window.location.replace('/campuslist');
   }
 
   render(){
@@ -73,7 +75,7 @@ class NewCampus extends Component{
             </Link>
           </div>
           <h2>Add New Campus</h2>
-          <form id="addCampus" onSubmit={this.handleSubmit}>
+          
             <div>
                 <label>Campus Name: </label>
                 <input type="text" name="campus" onChange={this.handleCampusInput} required/>
@@ -94,11 +96,11 @@ class NewCampus extends Component{
             <br></br>
 
             <div id="buttons">
-              <button type="submit">
+              <button type="submit" onClick={this.handleSubmit}>
                 <p>Add Campus</p>
               </button>
             </div>
-          </form>
+          
         </div>
       </div>
     );

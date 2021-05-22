@@ -15,6 +15,7 @@ class Campus extends Component {
 
   onViewCampus = (event) => {
     this.props.returnSingleCampus(this.props.id);
+
   }
 
   onEdit = (event) => {
@@ -22,7 +23,7 @@ class Campus extends Component {
   }
 
   onDelete = (event) => {
-    axios.delete('http://localhost:5000/api/campuses/' + this.props.id)
+    axios.delete('api/campuses/' + this.props.id)
       .then(response => {
         console.log(response);
       })

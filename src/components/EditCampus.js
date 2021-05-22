@@ -42,12 +42,12 @@ class EditCampus extends Component{
   }
 
   handleSubmit = (event) => {
-    axios.put('http://localhost:5000/api/campuses/' + this.props.id, 
+    axios.put('api/campuses/' + this.props.id, 
     {
-      "newName": this.state.campus,
-      "newImage": this.state.url,
-      "newAddress": this.state.location,
-      "newDescription": this.state.description
+      name: this.state.campus,
+      image: this.state.url,
+      address: this.state.location,
+      description: this.state.description
     }).then(response => {
       console.log(response);
     }).catch(err => {

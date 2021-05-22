@@ -17,7 +17,7 @@ class SingleCampus extends Component {
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
 
-    axios.get('http://localhost:5000/api/campuses' + this.props.campus)
+    axios.get('/api/campuses/' + this.props.campus)
       .then(response => {
         let campus = response.data;
         this.setState({campus});
@@ -32,7 +32,7 @@ class SingleCampus extends Component {
   }
 
   onDelete = (event) => {
-    axios.delete('http://localhost:5000/api/campuses' + this.state.campus.id)
+    axios.delete('/api/campuses/' + this.state.campus.id)
       .then(response => {
         console.log(response);
       })
