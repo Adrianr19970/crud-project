@@ -3,6 +3,7 @@ const router = express.Router();
 const { Student, Campus } = require('../database/models');
 
 const ash = require('express-async-handler');
+const { request } = require('express');
 
 /** GET ALL CAMPUSES */
 
@@ -31,7 +32,7 @@ router.delete('/:id', function(req, res, next) {
 
 /** ADD NEW CAMPUS */
 router.post('/', function(req, res, next) {
-  Campus.build(req.body)
+  Campus.create(req.body)
     .then(createdCampus => res.status(200).json(createdCampus))
     .catch(err => next(err));
 });

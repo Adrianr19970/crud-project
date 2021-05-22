@@ -12,6 +12,9 @@ const db = require('./database');
 //express router
 const apiRouter = require('./routes/index');
 
+//cors
+const cors= require('cors');
+app.use(cors());
 
 const syncDatabase = async () => {
   //sync and seed
