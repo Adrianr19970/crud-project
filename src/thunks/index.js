@@ -2,7 +2,7 @@ import url from '../apis/URL';
 import { returnCampuses, returnSingleCampus, returnStudents, returnSingleStudent} from '../actions';
 const axios= require('axios');
 
-export const allCampusesThunk = () => async(dispatch) => {
+export const allCampusesThunk = () => dispatch => {
   return url.get(`/api/campuses`)
   .then(res => res.data)
   .then(colleges => dispatch (returnCampuses(colleges)))

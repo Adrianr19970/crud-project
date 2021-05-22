@@ -1,6 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { returnCurrentEditCampus, returnSingleCampus } from '../actions';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import url from '../apis/URL';
+
 
 class NewCampus extends Component{
   constructor(props){
@@ -37,10 +41,7 @@ class NewCampus extends Component{
   }
 
   handleSubmit = () => {
-    console.log(
-      this.state.campus
-    );
-    axios.post('api/campuses/',{
+    axios.post('http://localhost:5000/api/campuses/',{
       name: this.state.campus,
       image: this.state.url,
       address: this.state.location,

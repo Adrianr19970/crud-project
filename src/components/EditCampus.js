@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { getCurrentEditCampus } from '../reducers';
+import { returnCurrentEditCampus } from '../actions';
 
 class EditCampus extends Component{
   constructor(props){
@@ -12,6 +14,7 @@ class EditCampus extends Component{
       location: '',
       url: '',
       description: '',
+      id: this.props.id
     }
 
     this.handleCampusInput = this.handleCampusInput.bind(this);
@@ -41,8 +44,8 @@ class EditCampus extends Component{
     this.setState({description: data.target.value});
   }
 
-  handleSubmit = (event) => {
-    axios.put('api/campuses/' + this.props.id, 
+  handleSubmit = () => {
+    axios.put('http://localhost:5000/api/campuses/' + this.state.id, 
     {
       name: this.state.campus,
       image: this.state.url,
@@ -52,8 +55,8 @@ class EditCampus extends Component{
       console.log(response);
     }).catch(err => {
       console.log(err);
-    })
-    window.location.replace('/campuslist')
+    });
+   window.location.replace('/campuslist');
   }
 
   render(){
@@ -80,7 +83,7 @@ class EditCampus extends Component{
 
           <br></br>
 
-          <form id="addCampus" onSubmit={this.handleSubmit}>
+         
             <div>
             <h3>Edit Campus Information</h3>
               <div>
@@ -103,12 +106,12 @@ class EditCampus extends Component{
               <br></br>
 
               <div id="buttons">
-                <button type="submit">
+                <button type="submit" onClick={this.handleSubmit}>
                   <p>Edit Campus</p>
                 </button>
               </div>
             </div>
-          </form>
+          
         </div>
       </div>
     );
@@ -121,4 +124,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps)(EditCampus);
+export default connect(mapStateToProps, returnCurrentEditCampus)(EditCampus);

@@ -15,7 +15,7 @@ class Campus extends Component {
 
   onViewCampus = (event) => {
     this.props.returnSingleCampus(this.props.id);
-
+    console.log(this.props.id)
   }
 
   onEdit = (event) => {
@@ -111,4 +111,14 @@ class Campus extends Component {
   }
 }
 
-export default connect(null, { returnCurrentEditCampus, returnSingleCampus })(Campus);
+
+function mapStateToProps(state){
+  return(
+    {
+      id:state.getCurrentEditCampus
+    }
+  );
+}
+
+
+export default connect(null, { returnCurrentEditCampus, returnSingleCampus, mapStateToProps })(Campus);
