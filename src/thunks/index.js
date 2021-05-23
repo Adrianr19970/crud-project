@@ -16,8 +16,8 @@ export const singleCampusThunk = id => dispatch => {
   .catch(err => console.log (err));
 }
 
-export const allStudentsThunk = () => dispatch => {
-  return url.get('/api/students')
+export const allStudentsThunk = () => async(dispatch) => {
+  return url.get(`/api/students`)
   .then(res => res.data)
   .then(students => dispatch(returnStudents (students)))
   .catch(err => console.log (err));

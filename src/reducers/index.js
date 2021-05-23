@@ -19,6 +19,7 @@ export const getSingleCampus = (campus = null, action) => {
 export const getStudents = (allStudents = [], action) => {
   switch(action.type) {
     case 'ALL_STUDENTS':
+      console.log( action.payload.length);
       return action.payload;
     default:
       return allStudents;

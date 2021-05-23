@@ -4,8 +4,16 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { returnCurrentEditCampus } from '../actions';
 import Student from './Student';
+import { allStudentsThunk} from '../thunks';
 
 class SingleCampus extends Component {
+ 
+  componentDidMount(){
+    this.props.getAllStudents();
+  }
+    
+  
+
   constructor(props){
     super(props);
 
@@ -13,6 +21,8 @@ class SingleCampus extends Component {
       campus: {},
       students: this.props.students
     }
+
+    
 
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
@@ -44,15 +54,15 @@ class SingleCampus extends Component {
 
   render() {
     let view = this.state.campus;
-    let students = this.state.students;
+    let students = [...this.props.students];
 
     let list = [];
-
+    console.log(students[0]);
     if (students.length === 0 || students.length === undefined) {
       list.push(<p>There are no students registered on this campus</p>);
     } else {
         for(let i = 0; i < students.length; i++) {
-          if(students[i].collegeId === view.id) {
+          if(students[i].campusId === view.id) {
             let name = students[i].firstname + ' ' + students[i].lastname;
             list.push(
                         <Student image={students[i].image_path} student={name} campus={students[i].campus} id={students[i].id}/>
@@ -119,5 +129,11 @@ const mapStateToProps = (state) => {
     students: state.getStudents
   };
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllStudents: () => dispatch(allStudentsThunk()),
+    returnCurrentEditCampus: returnCurrentEditCampus
+  };
+}
 
-export default connect(mapStateToProps, {returnCurrentEditCampus})(SingleCampus);
+export default connect(mapStateToProps, mapDispatchToProps)(SingleCampus);
