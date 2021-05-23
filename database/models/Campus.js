@@ -11,6 +11,7 @@ const Campus = db.define("campus", {
   
   image: {
     type: Sequelize.STRING,
+    defaultValue: 'https://universitybusiness.com/wp-content/uploads/2020/08/Promo-lecture-hall2.png'
   },
 
   address: {

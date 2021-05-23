@@ -21,8 +21,8 @@ const Student = db.define("student", {
 
   email: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
-      allowNull: false,
       isEmail: true,
       notEmpty: true
     }
@@ -30,10 +30,11 @@ const Student = db.define("student", {
 
   imageUrl: {
     type: Sequelize.STRING,
+    defaultValue: 'https://www.shareicon.net/data/512x512/2016/08/18/814671_user_512x512.png'
   },
 
   gpa: {
-    type: Sequelize.STRING,
+    type: Sequelize.DECIMAL,
     validate: {
       max: 4.0,
       min: 0.0
