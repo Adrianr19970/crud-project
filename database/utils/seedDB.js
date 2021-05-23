@@ -7,7 +7,7 @@ const seedDB = async () => {
 	});
 	const dummy_campus2 = await Campus.create({
 		name: "Harvard",
-		description: "This is a school in MA.",
+		description: "This is a school in MA."
 	});
 
 	const dummy_student = await Student.create({

@@ -8,11 +8,12 @@ const Campus = db.define("campus", {
     allowNull: false
   },
   
-  image:{
+  image: {
     type: Sequelize.STRING,
   },
-  address:{
-    type:Sequelize.STRING,
+
+  address: {
+    type: Sequelize.STRING,
   },
 
   description: {
