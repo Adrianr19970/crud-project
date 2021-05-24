@@ -14,7 +14,7 @@ const apiRouter = require('./routes/index');
 
 //cors
 const cors= require('cors');
-app.use(cors());
+app.use(cors({origin: 'http://localhost:3000'}));
 
 const syncDatabase = async () => {
   //sync and seed
