@@ -11,6 +11,7 @@ export const getSingleCampus = (campus = null, action) => {
   switch(action.type){
     case 'GET_CAMPUS':
       return action.payload;
+      
     default:
       return campus;
   }

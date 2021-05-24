@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { returnCurrentEditStudent } from '../actions';
+import { returnCurrentEditStudent, returnSingleCampus } from '../actions';
 import url from '../apis/URL';
 let axios= require('axios');
 
@@ -19,16 +19,10 @@ class SingleStudent extends Component{
     this.onDelete = this.onDelete.bind(this);
     this.handleCampusChange = this.handleCampusChange.bind(this);
     this.onSubmitCampusChange = this.onSubmitCampusChange.bind(this);
+    this.setStudent=this.setStudent.bind(this);
 
     console.log(this.props.student);
-    url.get('/api/students/' + this.props.student)
-      .then(response => {
-        let student = response.data;
-        this.setState({student});
-      })
-      .catch(err => {
-        console.log(err);
-      })
+   
 
     url.get('/api/campuses/' + this.state.student.campusId)
       .then(response => {
@@ -37,6 +31,20 @@ class SingleStudent extends Component{
       .catch(err => {
         console.log(err);
       })
+    this.setStudent();
+  }
+
+
+  setStudent= async() =>{
+    await url.get('/api/students/' + this.props.student)
+    .then(response => {
+      let student = response.data;
+      this.setState({student: student});
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    this.props.returnSingleCampus(this.state.student.campusId);
   }
 
   //changes state and edits student on database
@@ -56,12 +64,13 @@ class SingleStudent extends Component{
 
     this.setState({student: tempstudent});
     console.log(this.state.student.id);
-    axios.put('http://localhost:5000/api/students/'+this.state.student.id, this.state.student)
+   await axios.put('http://localhost:5000/api/students/'+this.state.student.id, this.state.student)
     .then(response=>{
       console.log(response);
     }).catch(err=>{
       console.log(err);
     })
+    this.props.returnSingleCampus(this.state.student.campusId);
   }
 
   onEdit = (event) => {
@@ -117,7 +126,8 @@ class SingleStudent extends Component{
                   <option value={campus.id}>{campus.name}</option>
                 );
     }
-
+    
+    
     return(
       <div className="App">
         <div className="App-header">
@@ -147,7 +157,8 @@ class SingleStudent extends Component{
             <h3>GPA: {student.gpa}</h3>
             {this.state.student.campus==null?
             <h3>Student is not enrolled in any campus</h3>:
-            <h3>{studentName} is enrolled in : {this.state.student.campus.name}</h3>
+            
+            <Link to= "/singlecampus"><h3>{studentName} is enrolled in : {this.state.student.campus.name}</h3> </Link>
            }
             <select className="ui dropdown"
               value={this.state.selectedNewCampusValue}
@@ -179,4 +190,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps, {returnCurrentEditStudent})(SingleStudent);
+export default connect(mapStateToProps, {returnCurrentEditStudent, returnSingleCampus})(SingleStudent);
