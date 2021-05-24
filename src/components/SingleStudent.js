@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { returnCurrentEditStudent } from '../actions';
 import url from '../apis/URL';
+let axios= require('axios');
 
 class SingleStudent extends Component{
   constructor(props){
@@ -13,12 +14,13 @@ class SingleStudent extends Component{
       student: {},
       studentsCampus: {}
     }
-
+    this.handleChange = this.handleChange.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.handleCampusChange = this.handleCampusChange.bind(this);
     this.onSubmitCampusChange = this.onSubmitCampusChange.bind(this);
 
+    console.log(this.props.student);
     url.get('/api/students/' + this.props.student)
       .then(response => {
         let student = response.data;
@@ -28,7 +30,7 @@ class SingleStudent extends Component{
         console.log(err);
       })
 
-    url.get('/api/campuses/' + this.student.campusId)
+    url.get('/api/campuses/' + this.state.student.campusId)
       .then(response => {
         console.log(response);
       })
@@ -37,12 +39,44 @@ class SingleStudent extends Component{
       })
   }
 
+  //changes state and edits student on database
+  handleChange = async(event) => {
+    console.log(this.state.student.campus);
+    let tempstudent= this.state.student;
+    await axios.get('http://localhost:5000/api/campuses/' + this.state.selectedNewCampus)
+    .then(response => {
+      let campus=response.data;
+ 
+      tempstudent.campus=response.data;
+      tempstudent.campusId= response.data.id;
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+
+    this.setState({student: tempstudent});
+    console.log(this.state.student.id);
+    axios.put('http://localhost:5000/api/students/'+this.state.student.id, this.state.student)
+    .then(response=>{
+      console.log(response);
+    }).catch(err=>{
+      console.log(err);
+    })
+  }
+
   onEdit = (event) => {
     console.log('Edit');
   }
 
   onDelete = (event) => {
-    console.log('delete');
+  axios.delete('http://localhost:5000/api/students/' + this.props.student)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    window.location.replace('studentlist');
   }
 
   handleCampusChange = (data) => {
@@ -70,10 +104,12 @@ class SingleStudent extends Component{
   }
 
   render() {
+    console.log(this.props.student)
     let list = [];
     let allCampuses = this.props.allCampuses;
     let student = this.state.student;
-    let studentName = student.firstName + student.lastName;
+    let studentName = student.firstname + " " + student.lastname;
+    console.log(student);
 
     for(let i = 0; i < allCampuses.length; i++){
       let campus = allCampuses[i];
@@ -109,7 +145,10 @@ class SingleStudent extends Component{
             <img src={student.image_path} alt={studentName} />
             <h3>{studentName}</h3>
             <h3>GPA: {student.gpa}</h3>
-
+            {this.state.student.campus==null?
+            <h3>Student is not enrolled in any campus</h3>:
+            <h3>{studentName} is enrolled in : {this.state.student.campus.name}</h3>
+           }
             <select className="ui dropdown"
               value={this.state.selectedNewCampusValue}
               onChange={this.handleCampusChange}
@@ -121,7 +160,7 @@ class SingleStudent extends Component{
 
           <br></br>
 
-          <div id="buttons">
+          <div id="buttons" onClick={this.handleChange}>
             <button className="ui red button">
               <p>Change Campus</p>
             </button>

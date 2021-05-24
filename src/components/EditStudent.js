@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import {returnSingleStudent} from '../actions'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
+
+let axios= require('axios');
 
 class EditStudent extends Component{
   constructor(props){
       super(props);
 
       this.state = {
+        student : {},
         firstName: '',
         lastName: '',
         gpa: '',
@@ -15,7 +19,13 @@ class EditStudent extends Component{
         url: '',
         collegeID: ''
       }
-
+      axios.get('http://localhost:5000/api/students/'+this.props.id)
+      .then(response => {
+        let student=response.data;
+        this.setState({student});
+      })
+      .catch(err=>{
+        console.log(err)});
       this.handleFirstNameInput = this.handleFirstNameInput.bind(this);
       this.handleLastNameInput = this.handleLastNameInput.bind(this);
       this.handleGPAInput = this.handleGPAInput.bind(this);
@@ -49,21 +59,27 @@ class EditStudent extends Component{
     this.setState({collegeID: data.target.value})
   }
 
-  handleSubmit = (event) => {
-    axios.put('http://localhost:5000/api/students' + this.props.id, {
-      "firstname": this.state.firstName,
-      "lastname": this.state.lastName,
-      "image": this.state.url,
-      "email": this.state.email,
-      "gpa": this.state.gpa,
-      "collegeID": this.state.collegeID
-    }).then(response => {
+  handleSubmit = async(event) => {
+    console.log(this.state.student.firstname);
+    let tempstudent=this.state.student;
+    tempstudent.firstname= this.state.firstName;
+    tempstudent.lastname= this.state.lastName;
+    tempstudent.imageUrl= this.state.url;
+    tempstudent.email = this.state.email;
+    tempstudent.gpa= this.state.gpa;
+
+    
+   this.setState({student:tempstudent});
+    console.log(this.state.student);
+
+    await axios.put('http://localhost:5000/api/students/'+this.state.student.id, this.state.student)
+    .then(response=>{
       console.log(response);
-    }).catch(err => {
+    }).catch(err=>{
       console.log(err);
     })
-
-    window.location.replace('/studentlist');
+    this.props.returnSingleStudent(this.state.student.id);
+    this.props.history.push('/singlestudent')
   }
 
   render(){
@@ -90,7 +106,7 @@ class EditStudent extends Component{
 
           <br></br>
 
-          <form id="addCampus" onSubmit={this.handleSubmit}>
+         
             <div>
             <h3>Edit Student</h3>
               <div>
@@ -121,13 +137,12 @@ class EditStudent extends Component{
               <br></br>
               
               <div id="buttons">
-                <button type="submit">
-                  <p>Edit Campus</p>
+                <button type="submit" onClick={this.handleSubmit}>
+                  <p>Edit Student</p>
                 </button>
               </div>
 
             </div>
-          </form>
         </div>
       </div>
     );
@@ -140,4 +155,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps)(EditStudent);
+export default withRouter(connect(mapStateToProps, {returnSingleStudent})(EditStudent));

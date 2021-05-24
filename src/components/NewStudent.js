@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {returnSingleStudent} from '../actions'
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+
 
 class NewStudent extends Component{
   constructor(props){
@@ -48,21 +52,24 @@ class NewStudent extends Component{
     this.setState({collegeID: e.target.value})
   }
 
-  handleSubmit = (event) => {
-    axios.post('http://localhost:5000/api/students',{
-      'firstName': this.state.firstName,
-      'lastName': this.state.lastName,
-      'url': this.state.url,
-      'gpa': this.state.gpa,
-      'email': this.state.email,
-      'collegeID': this.state.collegeID
+  handleSubmit = async() => {
+    let temp= {};
+    await axios.post('http://localhost:5000/api/students/',{
+      firstname: this.state.firstName,
+      lastname: this.state.lastName,
+      email: this.state.email,
+      imageUrl: this.state.url,
+      gpa: this.state.gpa
     }).then(response => {
+      temp=response.data.id;
       console.log(response);
     }).catch(err => {
       console.log(err);
     });
-
-    window.location.replace('studentlist');
+    
+    console.log(temp);
+    console.log(this.props.returnSingleStudent(temp));
+    this.props.history.push('/singlestudent')
   }
 
   render(){
@@ -97,7 +104,7 @@ class NewStudent extends Component{
             </Link>
           </div>
           <h2>Add New Student</h2>
-          <form id="addStudent" onSubmit={this.handleSubmit}>
+          
             <div>
               <div>
                 <label>Student First Name: </label>
@@ -126,17 +133,17 @@ class NewStudent extends Component{
 
               <br></br>
 
-              <div id="buttons">
+              <div id="buttons" onClick={this.handleSubmit}>
                 <button type="submit">
                   <p>Add Student</p>
                 </button>
               </div>
             </div>
-          </form>
+          
         </div>
       </div>
     );
   }
 }
 
-export default NewStudent;
+export default withRouter(connect (null, {returnSingleStudent})(NewStudent));

@@ -12,7 +12,6 @@ class SingleCampus extends Component {
     this.props.getAllStudents();
   }
     
-  
 
   constructor(props){
     super(props);
@@ -27,6 +26,7 @@ class SingleCampus extends Component {
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
 
+    console.log(this.props.campus);
     axios.get('/api/campuses/' + this.props.campus)
       .then(response => {
         let campus = response.data;
@@ -57,7 +57,7 @@ class SingleCampus extends Component {
     let students = [...this.props.students];
 
     let list = [];
-    console.log(students[0]);
+    console.log(students.length);
     if (students.length === 0 || students.length === undefined) {
       list.push(<p>There are no students registered on this campus</p>);
     } else {
@@ -69,6 +69,9 @@ class SingleCampus extends Component {
                       );
           }
         }
+    }
+    if (list.length===0 || list.length === undefined){
+      list.push(<p>There are no students registered on this campus</p>);
     }
 
     return (

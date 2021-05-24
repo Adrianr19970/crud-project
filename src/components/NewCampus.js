@@ -4,7 +4,7 @@ import { returnCurrentEditCampus, returnSingleCampus } from '../actions';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import url from '../apis/URL';
-
+import {withRouter} from 'react-router-dom';
 
 class NewCampus extends Component{
   constructor(props){
@@ -40,18 +40,22 @@ class NewCampus extends Component{
     this.setState({description: data.target.value});
   }
 
-  handleSubmit = () => {
-    axios.post('http://localhost:5000/api/campuses/',{
+  handleSubmit = async() => {
+    let temp=0;
+    await axios.post('http://localhost:5000/api/campuses/',{
       name: this.state.campus,
       image: this.state.url,
       address: this.state.location,
       description: this.state.description
     }).then(response => {
       console.log(response);
+      temp=response.data.id;
     }).catch(err => {
       console.log(err);
     });
-   window.location.replace('/campuslist');
+    console.log(temp);
+    this.props.returnSingleCampus(temp);
+    this.props.history.push('/singlecampus')
   }
 
   render(){
@@ -108,4 +112,5 @@ class NewCampus extends Component{
   }
 }
 
-export default NewCampus;
+
+export default withRouter(connect(null,{returnSingleCampus}) (NewCampus));

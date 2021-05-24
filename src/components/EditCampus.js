@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCurrentEditCampus } from '../reducers';
-import { returnCurrentEditCampus } from '../actions';
+import { returnCurrentEditCampus, returnSingleCampus } from '../actions';
+import {withRouter} from 'react-router-dom';
 
 class EditCampus extends Component{
   constructor(props){
@@ -44,8 +45,8 @@ class EditCampus extends Component{
     this.setState({description: data.target.value});
   }
 
-  handleSubmit = () => {
-    axios.put('http://localhost:5000/api/campuses/' + this.state.id, 
+  handleSubmit = async() => {
+    await axios.put('http://localhost:5000/api/campuses/' + this.state.id, 
     {
       name: this.state.campus,
       image: this.state.url,
@@ -56,7 +57,8 @@ class EditCampus extends Component{
     }).catch(err => {
       console.log(err);
     });
-   window.location.replace('/campuslist');
+    this.props.returnSingleCampus(this.props.id);
+   this.props.history.push('/singlecampus');
   }
 
   render(){
@@ -124,4 +126,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps, returnCurrentEditCampus)(EditCampus);
+export default withRouter(connect(mapStateToProps, {returnCurrentEditCampus, returnSingleCampus})(EditCampus));

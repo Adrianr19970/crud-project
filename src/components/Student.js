@@ -15,6 +15,7 @@ class Student extends Component {
 
   onViewStudent = (event) => {
     this.props.returnSingleStudent(this.props.id);
+
   }
 
   onEdit = (event) => {
@@ -50,9 +51,11 @@ class Student extends Component {
               </div>
 
               <div id="buttons">
+                <Link to='/singlestudent'>
                 <button onClick={this.onViewStudent}>
                   <p>View Student</p>
                 </button>
+                </Link>
               </div>
             </div>
 
